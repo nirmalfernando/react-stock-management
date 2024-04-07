@@ -1,25 +1,18 @@
 import express from "express";
 import {
-  addPost,
-  deletePost,
-  getPost,
-  getPosts,
-  updatePost,
-} from "../controllers/product";
+  addProduct,
+  deleteProduct,
+  getProduct,
+  getProducts,
+  updateProduct,
+} from "../controllers/product.js";
 
 const router = express.Router();
 
-//Get the data from the database
-router.get("/", getPosts);
-router.get("/:id", getPost);
-
-//Create the data for the database
-router.post("/", addPost);
-
-//Delete a data from the database
-router.delete("/:id", deletePost);
-
-//Update a data from the database
-router.update("/:id", updatePost);
+router.post("/product", addProduct);
+router.put("/product/:id", updateProduct);
+router.delete("/product/:id", deleteProduct);
+router.get("/product/:id", getProduct);
+router.get("/product", getProducts);
 
 export default router;

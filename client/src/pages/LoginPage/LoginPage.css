@@ -1,0 +1,112 @@
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    height: 100vh;
+  }
+  
+  .left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #d84e45;
+  }
+  
+  .website-label {
+    font-family: "Poppins", sans-serif;
+    font-size: 128px;
+    font-weight: 500;
+    line-height: 192px;
+    color: white;
+    text-align: left;
+  }
+  
+  .right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    color: #2A3256;
+    display: block;
+    margin-bottom: 5px;
+    text-align: left; 
+  }
+  
+  .username-input,
+  .password-input {
+    width: 500px; 
+    height: 64.84px;
+    padding: 10px;
+    border: none;
+    border-radius: 20px; 
+    background-color: #f4f2f0; 
+    color: #333; 
+    font-size: 16px;
+    text-align: left; 
+  }
+  
+  .username-input {
+    margin-bottom: 20px;
+  }
+  
+  .login-button {
+    width: 327px;
+    height: 57px;
+    margin: 0 auto; 
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #d84e45;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: #b83a31;
+  }
+  
+  .login-button-text {
+    width: 44px;
+    height: 19px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .forgot-password,
+  .create-account {
+    text-align: center;
+    width: auto; 
+    height: auto; 
+    margin-top: 20px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    justify-content: center; 
+  }
+  
+  .forgot-password {
+    color: #d84e45; 
+  }
+  
+  .create-account {
+    width: 287px; 
+    height: 28px; 
+    margin-top: 20px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    color: #9d9d9d; 
+  }
+  
+  .forgot-password:hover,
+  .create-account:hover {
+    text-decoration: underline;
+  }

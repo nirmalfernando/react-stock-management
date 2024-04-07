@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
-import '../LoginPage/LoginPage.css';
+import React, { useContext, useState } from "react";
+import "../LoginPage/LoginPage.css";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: "",
+  });
 
-  const handleSubmit = (e) => {
+  const [err, setErr] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const { login } = useContext(AuthContext);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Login clicked');
+    try {
+      await login(inputs);
+      navigate("/user");
+    } catch (err) {
+      setErr(err.response.data);
+    }
   };
 
   return (
@@ -21,10 +41,10 @@ const Login = () => {
           <input
             className="username-input"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
+            name="username"
             required
+            onChange={handleChange}
           />
         </div>
         <div className="form-group">
@@ -32,15 +52,24 @@ const Login = () => {
           <input
             className="password-input"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 8 characters"
+            placeholder="Password"
+            name="password"
             required
+            onChange={handleChange}
           />
         </div>
-        <button type="button" className="login-button" onClick={handleSubmit}>Login</button>
-        <a href="#" className="forgot-password">Forgot Password?</a>
-        <a href="#" className="create-account">Don’t have Account? Login an Owner and Create an Account</a>
+        {err && err}
+        <button type="button" className="login-button" onClick={handleLogin}>
+          Login
+        </button>
+        <a href="#" className="forgot-password">
+          Forgot Password?
+        </a>
+        <a href="#" className="create-account">
+          <Link to="/register">
+            Don’t have Account? Login as Owner or Create an Account
+          </Link>
+        </a>
       </div>
     </div>
   );

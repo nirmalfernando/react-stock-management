@@ -1,99 +1,158 @@
-import React, { useState } from 'react';
-import './RegistrationForm.css'; 
-import { FaTrash, FaImage } from 'react-icons/fa'; 
+import React, { useState } from "react";
+import "./RegistrationForm.css";
+import { FaTrash, FaImage } from "react-icons/fa";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import Login from "../LoginPage/Login";
 
 const RegistrationForm = () => {
-  
-  const [userId, setUserId] = useState('');
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [role, setRole] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [inputs, setInputs] = useState({
+    userid: null,
+    username: "",
+    name: "",
+    password: "",
+    email: "",
+    phoneno: "",
+    image: "",
+    role: "",
+  });
 
-  
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const [err, setErr] = useState(null);
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleClick = async (e) => {
     e.preventDefault();
-    
-  };
 
-  
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-  };
-
-  
-  const handleDeleteUser = () => {
-    
-    alert('Delete user functionality will be implemented later.');
+    try {
+      await axios.post("http://localhost:8800/api/auth/register", inputs);
+    } catch (err) {
+      setErr(err.response.data);
+    }
   };
 
   return (
     <div className="registration-form-container">
       <h2>Registration Form</h2>
-      <form onSubmit={handleSubmit}>
-
+      <form>
         <div className="column">
           <div className="form-group">
             <label htmlFor="userId">User ID:</label>
-            <input type="text" id="userId" value={userId} onChange={(e) => setUserId(e.target.value)} />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="name">Name:</label>
-            <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              id="userId"
+              name="userid"
+              placeholder="User ID"
+              onChange={handleChange}
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="username">Username:</label>
-            <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Username"
+              onChange={handleChange}
+            />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label htmlFor="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Name"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+            />
           </div>
         </div>
 
         <div className="column">
           <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
             <label htmlFor="phone">Phone:</label>
-            <input type="tel" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input
+              type="tel"
+              id="phoneno"
+              name="phoneno"
+              placeholder="Phone No"
+              onChange={handleChange}
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="role">Role:</label>
-            <input type="text" id="role" value={role} onChange={(e) => setRole(e.target.value)} />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+              type="text"
+              id="role"
+              name="role"
+              placeholder="Role"
+              onChange={handleChange}
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+            />
           </div>
         </div>
 
         <div className="photo-upload">
-          <label htmlFor="photo">Choose Photo:</label>
+          {/* <label htmlFor="photo">Choose Photo:</label>
           <div className="photo-upload-input">
-            <input type="file" id="photo" accept="image/*" onChange={handlePhotoChange} />
-            <label htmlFor="photo" className="file-label"><FaImage /> Choose File</label>
-          </div>
+            <input type="file" id="photo" accept="image/*" />
+            <label htmlFor="photo" className="file-label">
+              <FaImage /> Choose File
+            </label>
+          </div> */}
+          <input
+            type="text"
+            placeholder="image"
+            id="image"
+            name="image"
+            onChange={handleChange}
+          />
         </div>
 
-        <div className="delete-button" onClick={handleDeleteUser}>
+        <div className="delete-button">
           <FaTrash />
         </div>
-
-        <button type="submit" className="submit-button">Register</button>
+        {err && err}
+        <button type="submit" className="submit-button" onClick={handleClick}>
+          Register
+        </button>
       </form>
     </div>
   );

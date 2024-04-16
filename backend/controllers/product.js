@@ -2,13 +2,16 @@ import { db } from "../connect.js";
 
 export const addProduct = (req, res) => {
   const q =
-    "INSERT INTO product (`locationid`,`createdon`,`product`,`productacronym`,`brand`,`image`) VALUES (?)";
+    "INSERT INTO product (`productname`,`category`,`categoryid`,`brand`,`variant`,`sku`,`purchaseprice`,`sellingprice`,`image`) VALUES (?)";
   const values = [
-    req.body.locationid,
-    req.body.createdon,
-    req.body.product,
-    req.body.productacronym,
+    req.body.productname,
+    req.body.category,
+    req.body.categoryid,
     req.body.brand,
+    req.body.variant,
+    req.body.sku,
+    req.body.purchaseprice,
+    req.body.sellingprice,
     req.body.image,
   ];
 
@@ -21,12 +24,17 @@ export const addProduct = (req, res) => {
 export const updateProduct = (req, res) => {
   const productID = req.params.id;
   const q =
-    "UPDATE product SET `product` = ?, `productacronym` = ?, `brand` = ?, `image` = ? WHERE productid = ?";
+    "UPDATE product SET `productname` = ?, `category` = ?, `categoryid` = ?,`brand` = ?,`variant` = ?,`sku` = ?,`purchaseprice` = ?,`sellingprice` = ?, `image` = ? WHERE productid = ?";
 
   const values = [
-    req.body.product,
-    req.body.productacronym,
+    req.body.productname,
+    req.body.category,
+    req.body.categoryid,
     req.body.brand,
+    req.body.variant,
+    req.body.sku,
+    req.body.purchaseprice,
+    req.body.sellingprice,
     req.body.image,
   ];
 
@@ -49,7 +57,7 @@ export const deleteProduct = (req, res) => {
 export const getProduct = (req, res) => {
   const productID = req.params.id;
   const q = "SELECT * FROM product WHERE productid = ?";
-  db.query(q, [productID],(err, data) => {
+  db.query(q, [productID], (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
   });

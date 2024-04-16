@@ -1,0 +1,83 @@
+.bill-information-form-container7 {
+    max-width: 800px; /* Adjust as needed */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .form-group7 {
+    margin-bottom: 20px;
+  }
+  
+  .label7 {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .input-field7 {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .items-section {
+    margin-bottom: 20px;
+  }
+  
+  .bill-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .bill-table th,
+  .bill-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .bill-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .delete-item-icon7 {
+    font-size: 20px;
+    color: #D74339;
+    cursor: pointer;
+  }
+  
+  .summary-section7 {
+    margin-bottom: 20px;
+  }
+  
+  .buttons-section7 {
+    text-align: right;
+  }
+  
+  .cancel-button7,
+  .save-print-button7 {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #D74339;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .save-print-button7:hover,
+  .cancel-button7:hover {
+    background-color: #b33c33;
+  }
+  
+  .left-section7 {
+    float: left;
+  }
+  
+  .small-input7 {
+    width: 150px;
+  }
+  

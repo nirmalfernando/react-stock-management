@@ -1,0 +1,47 @@
+.dashboard {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 200px;
+  height: calc(100vh - 40px); 
+  text-align: left; 
+}
+
+.sidebar .shopname {
+  margin: 20px;
+  text-align: center;
+}
+
+.sidebar button {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #000000;
+  display: flex; 
+  align-items: center; 
+}
+
+.sidebar button span {
+  margin-left: 10px; 
+}
+
+.sidebar button.active {
+  background-color: #D74339;
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

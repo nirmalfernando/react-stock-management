@@ -1,13 +1,63 @@
-import React, { useState } from 'react';
-import './GoodReceive.css';
+import React, { useEffect, useState } from "react";
+import "./GoodReceive.css";
+import axios from "axios";
 const GoodReceive = () => {
+  const [inputs, setInputs] = useState({
+    product: "",
+    sku: "",
+    unitprice: null,
+    qty: null,
+    total: null,
+  });
+
+  const [err, setErr] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let newInputs = { ...inputs, [name]: value };
+
+    // Calculate total if either unit price or quantity changes
+    if (name === "unitprice" || name === "qty") {
+      const unitPrice = parseFloat(newInputs.unitprice);
+      const qty = parseFloat(newInputs.qty);
+      newInputs.total = (unitPrice * qty).toFixed(2); // Calculate total and round to 2 decimal places
+    }
+
+    setInputs(newInputs);
+  };
+
+  const handleClick = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    try {
+      await axios.post("http://localhost:8800/api/purchases/purchase", inputs);
+    } catch (err) {
+      setErr(err.response.data);
+    }
+  };
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchAllOrders = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8800/api/purchases/purchase"
+        );
+        setOrders(res.data);
+      } catch (err) {
+        setErr(err.response.data);
+      }
+    };
+    fetchAllOrders();
+  }, []);
 
   const [isModalOpen, setModalOpen] = useState(false);
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
   return (
-
     <div className="good-receive">
       <div className="content-box11">
         <div className="dropdown-container">
@@ -39,7 +89,7 @@ const GoodReceive = () => {
         <table className="product-table11">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>SKU</th>
               <th>Product Name</th>
               <th>QTY</th>
               <th>Price</th>
@@ -48,44 +98,36 @@ const GoodReceive = () => {
               <th>Discount</th>
               <th>Total</th>
             </tr>
-
           </thead>
           <tbody>
             <tr className="search-row11">
-              <th><input type="text" placeholder="Search ID" className="search-input11" /></th>
-              <th><input type="text" placeholder="Search Name" className="search-input11" /></th>
+              <th>
+                <input
+                  type="text"
+                  placeholder="Search SKU"
+                  className="search-input11"
+                />
+              </th>
+              <th>
+                <input
+                  type="text"
+                  placeholder="Search Name"
+                  className="search-input11"
+                />
+              </th>
               <th colSpan="6"></th>
             </tr>
-            <tr>
-              <td>000001</td>
-              <td>iphone14</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,000</td>
-              <td className="numeric">210,000</td>
-              <td className="numeric">10</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,00</td>
-            </tr>
-            <tr>
-              <td>000001</td>
-              <td>iphone14</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,000</td>
-              <td className="numeric">210,000</td>
-              <td className="numeric">10</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,00</td>
-            </tr>
-            <tr>
-              <td>000001</td>
-              <td>iphone14</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,000</td>
-              <td className="numeric">210,000</td>
-              <td className="numeric">10</td>
-              <td className="numeric">10</td>
-              <td className="numeric">200,00</td>
-            </tr>
+            <div className="orders">
+              {orders.map((order) => (
+                <tr>
+                  <td>{order.sku}</td>
+                  <td>{order.product}</td>
+                  <td className="numeric">{order.unitprice}</td>
+                  <td className="numeric">{order.qty}</td>
+                  <td className="numeric">{order.total}</td>
+                </tr>
+              ))}
+            </div>
           </tbody>
         </table>
         <div className="bottom-section11">
@@ -100,31 +142,87 @@ const GoodReceive = () => {
             </div>
           </div>
           <div className="summary-section11">
-            <div className="summary-item11"><strong>Subtotal</strong> $600.00</div>
-            <div className="summary-item11"><strong>Tax (0%)</strong> $0.00</div>
-            <div className="summary-item11"><strong>Discount (0%)</strong> $0.00</div>
-            <div className="summary-item11"><strong>Total</strong> $600.00</div>
+            <div className="summary-item11">
+              <strong>Subtotal</strong> $600.00
+            </div>
+            <div className="summary-item11">
+              <strong>Tax (0%)</strong> $0.00
+            </div>
+            <div className="summary-item11">
+              <strong>Discount (0%)</strong> $0.00
+            </div>
+            <div className="summary-item11">
+              <strong>Total</strong> $600.00
+            </div>
           </div>
         </div>
         <div className="buttons-container11">
           <button className="close-button11">Close</button>
-          <button className="add-button11" onClick={toggleModal}>ADD</button>
+          <button className="add-button11" onClick={toggleModal}>
+            ADD
+          </button>
           <button className="save-button11">Save</button>
         </div>
         {isModalOpen && (
           <div className="modal11">
             <div className="modal-content11">
-              <h2>Enter New Product Details</h2>
-              <input type="text" placeholder="ID" />
-              <input type="text" placeholder="Product Name" />
-              <input type="number" placeholder="QTY" />
-              <input type="text" placeholder="Price" />
-              <input type="text" placeholder="Selling Price" />
-              <input type="text" placeholder="Tax" />
-              <input type="text" placeholder="Discount" />
+              <h2>Enter New Purchasing Order Details</h2>
+              <input
+                type="text"
+                placeholder="SKU"
+                id="sku"
+                name="sku"
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                placeholder="Product Name"
+                id="product"
+                name="product"
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                placeholder="Unit Price"
+                id="unitprice"
+                name="unitprice"
+                value={inputs.unitprice}
+                onChange={handleChange}
+              />
+              <input
+                type="number"
+                placeholder="QTY"
+                id="qty"
+                name="qty"
+                value={inputs.qty}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                placeholder="Total Price"
+                id="total"
+                name="total"
+                value={inputs.total}
+                onChange={handleChange}
+              />
               <div className="modal-buttons11">
-                <button className="add-row-button11" style={{ backgroundColor: "#d84339" }} onClick={toggleModal}>Add</button>
-                <button className="cancel-button11" style={{ backgroundColor: "#f2f4f0" }} onClick={toggleModal}>Cancel</button>
+                <button
+                  className="add-row-button11"
+                  style={{ backgroundColor: "#d84339" }}
+                  onClick={(event) => {
+                    toggleModal();
+                    handleClick(event);
+                  }}
+                >
+                  Add
+                </button>
+                <button
+                  className="cancel-button11"
+                  style={{ backgroundColor: "#f2f4f0" }}
+                  onClick={toggleModal}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -132,6 +230,6 @@ const GoodReceive = () => {
       </div>
     </div>
   );
-}
+};
 
 export default GoodReceive;

@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import productRoutes from "./routes/products.js";
 import purchaseRoutes from "./routes/purchases.js";
+import goodReceiveRoutes from "./routes/goodreceives.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
@@ -28,6 +29,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/purchases", purchaseRoutes);
+app.use("/api/goodreceives", goodReceiveRoutes);
 
 //
 // app.get("/user", (req, res) => {

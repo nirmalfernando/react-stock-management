@@ -24,7 +24,7 @@ export const addProduct = (req, res) => {
 export const updateProduct = (req, res) => {
   const productID = req.params.id;
   const q =
-    "UPDATE product SET `productname` = ?, `category` = ?, `categoryid` = ?,`brand` = ?,`variant` = ?,`sku` = ?,`purchaseprice` = ?,`sellingprice` = ?, `image` = ? WHERE productid = ?";
+    "UPDATE product SET `productname` = ?, `category` = ?, `categoryid` = ?,`brand` = ?,`variant` = ?,`purchaseprice` = ?,`sellingprice` = ?, `image` = ? WHERE sku = ?";
 
   const values = [
     req.body.productname,
@@ -32,7 +32,6 @@ export const updateProduct = (req, res) => {
     req.body.categoryid,
     req.body.brand,
     req.body.variant,
-    req.body.sku,
     req.body.purchaseprice,
     req.body.sellingprice,
     req.body.image,
@@ -46,7 +45,7 @@ export const updateProduct = (req, res) => {
 
 export const deleteProduct = (req, res) => {
   const productID = req.params.id;
-  const q = "DELETE FROM product WHERE productid = ?";
+  const q = "DELETE FROM product WHERE sku = ?";
 
   db.query(q, [productID], (err, data) => {
     if (err) return res.json(err);
@@ -56,7 +55,7 @@ export const deleteProduct = (req, res) => {
 
 export const getProduct = (req, res) => {
   const productID = req.params.id;
-  const q = "SELECT * FROM product WHERE productid = ?";
+  const q = "SELECT * FROM product WHERE sku = ?";
   db.query(q, [productID], (err, data) => {
     if (err) return res.json(err);
     return res.json(data);

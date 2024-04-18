@@ -57,7 +57,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="capitalPrice">Purchasing Price:</label>
+            <label htmlFor="capitalPrice">Purchasing Price (LKR):</label>
             <input
               type="text"
               id="purchaseprice"
@@ -67,7 +67,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="sellingPrice">Selling Price:</label>
+            <label htmlFor="sellingPrice">Selling Price (LKR):</label>
             <input
               type="text"
               id="sellingprice"

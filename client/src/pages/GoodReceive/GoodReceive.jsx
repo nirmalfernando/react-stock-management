@@ -12,17 +12,32 @@ const GoodReceive = () => {
 
   const [err, setErr] = useState(null);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
     let newInputs = { ...inputs, [name]: value };
 
-    // Calculate total if either unit price or quantity changes
     if (name === "unitprice" || name === "qty") {
+      // Calculate total if either unit price or quantity changes
       const unitPrice = parseFloat(newInputs.unitprice);
       const qty = parseFloat(newInputs.qty);
-      newInputs.total = (unitPrice * qty).toFixed(2); // Calculate total and round to 2 decimal places
+      newInputs.total = (unitPrice * qty).toFixed(2);
     }
 
+    // Fetch product details based on SKU
+    if (name === "sku" && value) {
+      try {
+        const res = await axios.get(
+          `http://localhost:8800/api/products/product/${value}`
+        );
+        const product = res.data[0];
+        console.log(res.data);
+        newInputs.product = product.productname;
+        newInputs.unitprice = product.purchaseprice;
+      } catch (err) {
+        setErr(err.response.data);
+      }
+    }
+    console.log(newInputs);
     setInputs(newInputs);
   };
 
@@ -117,9 +132,9 @@ const GoodReceive = () => {
               </th>
               <th colSpan="6"></th>
             </tr>
-            <div className="orders">
+            <div>
               {orders.map((order) => (
-                <tr>
+                <tr className="orders">
                   <td>{order.sku}</td>
                   <td>{order.product}</td>
                   <td className="numeric">{order.unitprice}</td>
@@ -179,6 +194,7 @@ const GoodReceive = () => {
                 placeholder="Product Name"
                 id="product"
                 name="product"
+                value={inputs.product}
                 onChange={handleChange}
               />
               <input
@@ -205,6 +221,7 @@ const GoodReceive = () => {
                 value={inputs.total}
                 onChange={handleChange}
               />
+              {err && err}
               <div className="modal-buttons11">
                 <button
                   className="add-row-button11"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import "./POS.css";
@@ -6,27 +6,28 @@ import axios from "axios";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
-
-  const [err, setErr] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/api/products/product")
-        setProducts(res.data)
+        const res = await axios.get("http://localhost:8800/api/products/product");
+        setProducts(res.data);
       } catch (err) {
-        setErr(err.response.data);
+        console.error("Error fetching products:", err);
       }
     };
-    fetchAllProducts()
-  },[]);
+    fetchAllProducts();
+  }, []);
 
-  const navigate = useNavigate();
+  const handleCart = () => {
+    navigate("/bill", { state: { cartItems } });
+  };
 
-  const handleCart = (e) => {
-    navigate("/bill");
-    e.preventDefault();
-    console.log("Cart clicked");
+  const handleAddToCart = (product) => {
+    const updatedCartItems = [...cartItems, product];
+    setCartItems(updatedCartItems);
   };
 
   return (
@@ -41,7 +42,7 @@ const ProductPage = () => {
           <option value="name">Name</option>
         </select>
         <button className="cart-button" onClick={handleCart}>
-          <AiOutlineShoppingCart />
+          <AiOutlineShoppingCart /> {cartItems.length}
         </button>
       </div>
       <div className="product-list">
@@ -55,8 +56,19 @@ const ProductPage = () => {
               className="card-img"
             />
             <div className="card-details">
-              <button className="add-to-cart-button">
-                <span className="price">${product.sellingprice}</span>
+              <button
+                className="add-to-cart-button"
+                onClick={() =>
+                  handleAddToCart({
+                    sku: product.sku,
+                    productname: product.productname,
+                    unitprice: product.sellingprice, // Use sellingprice here
+                    qty: 1, // Default quantity is 1
+                    sellingprice: product.sellingprice // Use sellingprice here as well
+                  })
+                }
+              >
+                <span className="price">LKR {product.sellingprice}</span>
                 <span className="add-to-cart-icon">+</span>
               </button>
             </div>

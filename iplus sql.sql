@@ -1,60 +1,80 @@
-CREATE DATABASE iplus;
 use iplus;
-CREATE TABLE user(
-	userid int PRIMARY KEY,
-    username varchar(255),
-    name varchar(255),
-    password varchar(255),
-    email varchar(255),
-    phoneno varchar(45),
-    image varchar(255),
-    role varchar(45),
-    status varchar(255),
-    statusdate datetime);
-    
-use iplus;
-select * from user;
 
-CREATE TABLE category(
-	categoryid int PRIMARY KEY,
-    category varchar(255),
-    status varchar(255),
-    statusdate datetime);
-    
-use iplus;
-select * from category;
-
-CREATE TABLE product (
-    productid INT PRIMARY KEY AUTO_INCREMENT,
-    productname VARCHAR(255),
-    category VARCHAR(100),
-    categoryid INT,
-    brand VARCHAR(255),
-    variant VARCHAR(255),
-    sku VARCHAR(100) UNIQUE, -- Adding UNIQUE constraint
-    purchaseprice DOUBLE,
-    sellingprice DOUBLE,
-    image VARCHAR(255),
-    status VARCHAR(255),
-    statusdate DATETIME,
-    FOREIGN KEY (categoryid) REFERENCES category(categoryid)
+CREATE TABLE goodreceive(
+	grnno int PRIMARY KEY auto_increment,
+    invoiceid int,
+    date datetime,
+    discount double,
+    tax double,
+    total double
 );
 
 use iplus;
-select * from product;
+select * from goodreceive;
 
-CREATE TABLE purchasingorder (
-    poid INT PRIMARY KEY AUTO_INCREMENT,
-    product VARCHAR(255),
-    sku VARCHAR(100),
-    unitprice DOUBLE,
-    qty INT,
-    total DOUBLE,
-    status VARCHAR(255),
-    statusdate DATETIME,
-    FOREIGN KEY (sku) REFERENCES product(sku) -- Adding foreign key constraint
+CREATE TABLE goodreceive_details(
+	id int PRIMARY KEY auto_increment,
+	grnno int,
+    sku varchar(100),
+    product varchar(255),
+    unitprice double,
+    qty int,
+    total double,
+    FOREIGN KEY (grnno) REFERENCES goodreceive(grnno)
 );
 
 use iplus;
-select * from purchasingorder;
+select * from goodreceive_details;
 
+CREATE TABLE salesorder(
+	id int PRIMARY KEY auto_increment,
+    date datetime,
+    tax double,
+    discount double,
+    total double,
+    amountpaid double,
+    balance double
+);
+
+CREATE TABLE salesorder_details(
+	id int PRIMARY KEY auto_increment,
+    salesorderid int,
+    sku varchar(100),
+    product varchar(255),
+    qty int,
+    unitprice double,
+    total double,
+	FOREIGN KEY (salesorderid) REFERENCES salesorder(id)	
+);
+
+use iplus;
+select * from salesorder;
+use iplus;
+select * from salesorder_details;
+
+CREATE TABLE goodreturn(
+	grnno int PRIMARY KEY auto_increment,
+    billid int,
+    date datetime,
+    discount double,
+    tax double,
+    total double,
+    FOREIGN KEY (billid) REFERENCES salesorder(id)
+);
+
+CREATE TABLE goodreturn_details(
+	id int PRIMARY KEY auto_increment,
+	grnno int,
+    sku varchar(100),
+    product varchar(255),
+    unitprice double,
+    qty int,
+    total double,
+    FOREIGN KEY (grnno) REFERENCES goodreturn(grnno)
+);
+
+use iplus;
+select * from goodreturn;
+
+use iplus;
+select * from goodreturn_details;

@@ -1,27 +1,98 @@
-import React, { useState } from 'react';
-import './BillInfo.css'; 
-import { FaTrash } from 'react-icons/fa'; 
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import "./BillInfo.css";
 
 const BillInformationForm = () => {
-  const [items, setItems] = useState([
-    { itemName: 'Item 1', quantity: 2, rate: 10, lineTotal: 20 },
-    { itemName: 'Item 2', quantity: 1, rate: 15, lineTotal: 15 },
-    // Add more example items here if needed
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+  const [error, setError] = useState(null);
+  const [inputs, setInputs] = useState({
+    tax: "",
+    discount: "",
+  });
+  const [amountPaid, setAmountPaid] = useState("");
+  const location = useLocation();
 
-  const removeItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
+  useEffect(() => {
+    if (location.state && location.state.cartItems) {
+      setCartItems(location.state.cartItems);
+    }
+  }, [location]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
   };
 
-  const navigate = useNavigate();
+  const formattedDate = new Date().toISOString().split("T")[0];
 
-  const handleBack = (e) => {
-    navigate("/side")
-    e.preventDefault();
-    console.log('Login clicked');
+  const saveOrder = async () => {
+    try {
+      const orderDetails = cartItems.map((item) => ({
+        sku: item.sku,
+        product: item.productname,
+        qty: item.qty,
+        unitprice: item.sellingprice,
+        total: item.qty * item.sellingprice,
+      }));
+
+      // Format the date to "YYYY-MM-DD" format
+      const formattedDate = new Date().toISOString().split("T")[0];
+
+      // Log the payload (request) before sending
+      console.log("Sending payload:", {
+        date: formattedDate,
+        tax: parseFloat(inputs.tax) || 0,
+        discount: parseFloat(inputs.discount) || 0,
+        total: calculateTotal(),
+        amountPaid: parseFloat(amountPaid) || 0,
+        balance: calculateTotal() - (parseFloat(amountPaid) || 0),
+        items: orderDetails,
+      });
+
+      await axios.post("http://localhost:8800/api/salesorders/order", {
+        date: formattedDate,
+        tax: parseFloat(inputs.tax) || 0,
+        discount: parseFloat(inputs.discount) || 0,
+        total: calculateTotal(),
+        amountPaid: parseFloat(amountPaid) || 0,
+        balance: calculateTotal() - (parseFloat(amountPaid) || 0),
+        items: orderDetails,
+      });
+
+      // Reset cartItems after successful order submission
+      setCartItems([]);
+      setError(null);
+    } catch (error) {
+      setError("Error saving order. Please try again later.");
+      console.error("Error saving order:", error);
+    }
+  };
+
+  const calculateSubTotal = () => {
+    let subtotal = 0;
+    for (const item of cartItems) {
+      subtotal += item.qty * item.sellingprice;
+    }
+    return subtotal;
+  };
+
+  const calculateTotal = () => {
+    const subtotal = parseFloat(calculateSubTotal());
+    const discount = parseFloat(inputs.discount) || 0;
+    const tax = parseFloat(inputs.tax) || 0;
+    const discountAmount = subtotal * (discount / 100);
+    const taxAmount = subtotal * (tax / 100);
+    const total = subtotal - discountAmount + taxAmount;
+    return total.toFixed(2);
+  };
+
+  const handleBack = () => {
+    // Handle going back to the previous page
+  };
+
+  const handleAmountPaidChange = (e) => {
+    setAmountPaid(e.target.value);
   };
 
   return (
@@ -34,21 +105,29 @@ const BillInformationForm = () => {
           <table className="bill-table">
             <thead>
               <tr>
+                <th>SKU</th>
                 <th>Item Name</th>
                 <th>Quantity</th>
-                <th>Rate</th>
-                <th>Line Total</th>
-                <th>Action</th>
+                <th>Price</th>
+                <th>Total</th>
               </tr>
             </thead>
             <tbody>
-              {items.map((item, index) => (
+              {cartItems.map((item, index) => (
                 <tr key={index}>
-                  <td><span>{item.itemName}</span></td>
-                  <td><span>{item.quantity}</span></td>
-                  <td><span>{item.rate}</span></td>
-                  <td>{item.lineTotal}</td>
-                  <td><FaTrash onClick={() => removeItem(index)} className="delete-item-icon" /></td>
+                  <td>
+                    <span>{item.sku}</span>
+                  </td>
+                  <td>
+                    <span>{item.productname}</span>
+                  </td>
+                  <td>
+                    <span>{item.qty}</span>
+                  </td>
+                  <td>
+                    <span>{item.sellingprice}</span>
+                  </td>
+                  <td>{item.qty * item.sellingprice}</td>
                 </tr>
               ))}
             </tbody>
@@ -56,28 +135,74 @@ const BillInformationForm = () => {
         </div>
       </div>
 
+      <div className="summary-section7">
+        <div className="subtotal">
+          <strong>Subtotal: </strong> LKR {calculateSubTotal()}
+        </div>
+        <div className="summary-item11">
+          <strong>Tax ({inputs.tax || 0}%)</strong> LKR{" "}
+          {(
+            parseFloat(calculateSubTotal()) *
+            (parseFloat(inputs.tax) / 100 || 0)
+          ).toFixed(2)}
+        </div>
+        <div className="summary-item11">
+          <strong>Discount ({inputs.discount || 0}%)</strong> LKR{" "}
+          {(
+            parseFloat(calculateSubTotal()) *
+            (parseFloat(inputs.discount) / 100 || 0)
+          ).toFixed(2)}
+        </div>
+        <div className="total">
+          <strong>Total: </strong> LKR {calculateTotal()}
+        </div>
+        <div className="amount-paid">
+          <label htmlFor="amountPaid">
+            <strong1>AmountPaid:</strong1>
+          </label>
+          <input
+            type="text"
+            id="amountPaid"
+            className="amount-paid-input"
+            value={amountPaid}
+            onChange={handleAmountPaidChange}
+          />
+        </div>
+        <div className="balance">
+          <strong>Balance: </strong> LKR {calculateTotal() - amountPaid}
+        </div>
+      </div>
+
       <div className="other-details-section7">
         <div className="form-group7">
           <label htmlFor="taxPercentage">Tax Percentage:</label>
-          <input type="text" id="taxPercentage" />
+          <input
+            type="text"
+            id="taxPercentage"
+            name="tax"
+            onChange={handleChange}
+          />
         </div>
-
 
         <div className="form-group7">
           <label htmlFor="discount">Discount:</label>
-          <input type="text" id="discount" />
+          <input
+            type="text"
+            id="discount"
+            name="discount"
+            onChange={handleChange}
+          />
         </div>
       </div>
 
-      <div className="summary-section7">
-        <div className="subtotal">Subtotal: $</div>
-        <div className="tax">Tax: $</div>
-        <div className="total">Total: $</div>
-      </div>
-
       <div className="buttons-section7">
-        <button className="cancel-button7" onClick={handleBack}>Cancel</button>
-        <button className="save-print-button7">Save and Print Bill</button>
+        <button className="cancel-button7" onClick={handleBack}>
+          Cancel
+        </button>
+        <button className="save-print-button7" onClick={saveOrder}>
+          Save and Print Bill
+        </button>
+        {error && <div className="error-message">{error}</div>}
       </div>
     </div>
   );

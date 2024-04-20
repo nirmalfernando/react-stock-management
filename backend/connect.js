@@ -1,15 +1,8 @@
-import mysql from "mysql2";
+import mysql from "mysql";
 
 export const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "@Pasith#2002",
+  password: "N33ajapnfern@ndo",
   database: "iplus",
-});
-
-db.connect((err) => {
-  if (err) {
-    return console.log(err.message);
-  }
-  console.log("Database connected!!!");
 });

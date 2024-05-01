@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./GoodReceive.css";
 import axios from "axios";
+
 const GoodReceive = () => {
   const [inputs, setInputs] = useState({
     product: "",
@@ -8,65 +9,90 @@ const GoodReceive = () => {
     unitprice: null,
     qty: null,
     total: null,
+    grnno: "",
+    invoiceid: "",
+    date: "",
+    discount: null,
+    tax: null,
   });
 
   const [err, setErr] = useState(null);
+  const [orders, setOrders] = useState([]);
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
     let newInputs = { ...inputs, [name]: value };
 
     if (name === "unitprice" || name === "qty") {
-      // Calculate total if either unit price or quantity changes
-      const unitPrice = parseFloat(newInputs.unitprice);
-      const qty = parseFloat(newInputs.qty);
-      newInputs.total = (unitPrice * qty).toFixed(2);
+      const unitPrice = parseFloat(newInputs.unitprice) || 0;
+      const qty = parseFloat(newInputs.qty) || 0;
+      const total = (unitPrice * qty).toFixed(2);
+      newInputs.total = total;
     }
 
-    // Fetch product details based on SKU
     if (name === "sku" && value) {
       try {
         const res = await axios.get(
           `http://localhost:8800/api/products/product/${value}`
         );
         const product = res.data[0];
-        console.log(res.data);
         newInputs.product = product.productname;
         newInputs.unitprice = product.purchaseprice;
       } catch (err) {
         setErr(err.response.data);
       }
     }
-    console.log(newInputs);
+
     setInputs(newInputs);
   };
 
-  const handleClick = async (e) => {
-    if (e) {
-      e.preventDefault();
+  const handleAddOrder = () => {
+    const { sku, product, unitprice, qty, total } = inputs;
+    if (sku && product && unitprice && qty && total) {
+      setOrders([...orders, inputs]);
+      setInputs({
+        ...inputs,
+        sku: "",
+        product: "",
+        unitprice: null,
+        qty: null,
+        total: null,
+      });
+    } else {
+      setErr("Please fill all order details");
     }
+  };
+
+  const handleSave = async () => {
     try {
-      await axios.post("http://localhost:8800/api/purchases/purchase", inputs);
+      await axios.post("http://localhost:8800/api/goodreceives/goodreceive", {
+        ...inputs,
+        orders: orders,
+      });
+      // Clear orders after saving
+      setOrders([]);
     } catch (err) {
       setErr(err.response.data);
     }
   };
 
-  const [orders, setOrders] = useState([]);
+  const calculateSubTotal = () => {
+    let subtotal = 0;
+    for (const order of orders) {
+      subtotal += parseFloat(order.total);
+    }
+    return subtotal.toFixed(2);
+  };
 
-  useEffect(() => {
-    const fetchAllOrders = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8800/api/purchases/purchase"
-        );
-        setOrders(res.data);
-      } catch (err) {
-        setErr(err.response.data);
-      }
-    };
-    fetchAllOrders();
-  }, []);
+  const calculateTotal = () => {
+    const subtotal = parseFloat(calculateSubTotal());
+    const discount = parseFloat(inputs.discount) || 0;
+    const tax = parseFloat(inputs.tax) || 0;
+    const discountAmount = subtotal * (discount / 100);
+    const taxAmount = subtotal * (tax / 100);
+    const total = subtotal - discountAmount + taxAmount;
+    return total.toFixed(2);
+  };
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -87,17 +113,32 @@ const GoodReceive = () => {
           <div className="form-column11">
             <div className="form-group11">
               <label htmlFor="grnNo">GRN No</label>
-              <input type="text" id="grnNo" name="grnNo" />
+              <input
+                type="text"
+                id="grnno"
+                name="grnno"
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group11">
               <label htmlFor="invoiceId">Invoice ID</label>
-              <input type="text" id="invoiceId" name="invoiceId" />
+              <input
+                type="text"
+                id="invoiceid"
+                name="invoiceid"
+                onChange={handleChange}
+              />
             </div>
           </div>
           <div className="form-column11">
             <div className="form-group11">
               <label htmlFor="date">Date</label>
-              <input type="date" id="date" name="date" />
+              <input
+                type="date"
+                id="date"
+                name="date"
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
@@ -106,11 +147,8 @@ const GoodReceive = () => {
             <tr>
               <th>SKU</th>
               <th>Product Name</th>
-              <th>QTY</th>
-              <th>Price</th>
-              <th>Selling Price</th>
-              <th>Tax</th>
-              <th>Discount</th>
+              <th>Unit Price</th>
+              <th>Qty</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -132,42 +170,58 @@ const GoodReceive = () => {
               </th>
               <th colSpan="6"></th>
             </tr>
-            <div>
-              {orders.map((order) => (
-                <tr className="orders">
-                  <td>{order.sku}</td>
-                  <td>{order.product}</td>
-                  <td className="numeric">{order.unitprice}</td>
-                  <td className="numeric">{order.qty}</td>
-                  <td className="numeric">{order.total}</td>
-                </tr>
-              ))}
-            </div>
+            {orders.map((order, index) => (
+              <tr className="orders" key={index}>
+                <td>{order.sku}</td>
+                <td>{order.product}</td>
+                <td className="numeric">{order.unitprice}</td>
+                <td className="numeric">{order.qty}</td>
+                <td className="numeric">{order.total}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div className="bottom-section11">
           <div className="calculation-fields11">
             <div className="form-group11">
               <label htmlFor="discount">Discount</label>
-              <input type="text" id="discount" name="discount" />
+              <input
+                type="text"
+                id="discount"
+                name="discount"
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group11">
-              <label1 htmlFor="tax">Tax</label1>
-              <input type="text" id="tax" name="tax" />
+              <label htmlFor="tax">Tax</label>
+              <input
+                type="text"
+                id="tax"
+                name="tax"
+                onChange={handleChange}
+              />
             </div>
           </div>
           <div className="summary-section11">
             <div className="summary-item11">
-              <strong>Subtotal</strong> $600.00
+              <strong>Subtotal</strong> LKR {calculateSubTotal()}
             </div>
             <div className="summary-item11">
-              <strong>Tax (0%)</strong> $0.00
+              <strong>Tax ({inputs.tax || 0}%)</strong> LKR{" "}
+              {(
+                parseFloat(calculateSubTotal()) *
+                (parseFloat(inputs.tax) / 100 || 0)
+              ).toFixed(2)}
             </div>
             <div className="summary-item11">
-              <strong>Discount (0%)</strong> $0.00
+              <strong>Discount ({inputs.discount || 0}%)</strong> LKR{" "}
+              {(
+                parseFloat(calculateSubTotal()) *
+                (parseFloat(inputs.discount) / 100 || 0)
+              ).toFixed(2)}
             </div>
             <div className="summary-item11">
-              <strong>Total</strong> $600.00
+              <strong>Total</strong> LKR {calculateTotal()}
             </div>
           </div>
         </div>
@@ -176,7 +230,10 @@ const GoodReceive = () => {
           <button className="add-button11" onClick={toggleModal}>
             ADD
           </button>
-          <button className="save-button11">Save</button>
+          <button className="save-button11" onClick={handleSave}>
+            Save
+          </button>
+          {err && <div className="error">{err}</div>}
         </div>
         {isModalOpen && (
           <div className="modal11">
@@ -221,15 +278,12 @@ const GoodReceive = () => {
                 value={inputs.total}
                 onChange={handleChange}
               />
-              {err && err}
+              {err && <div className="error">{err}</div>}
               <div className="modal-buttons11">
                 <button
                   className="add-row-button11"
                   style={{ backgroundColor: "#d84339" }}
-                  onClick={(event) => {
-                    toggleModal();
-                    handleClick(event);
-                  }}
+                  onClick={handleAddOrder}
                 >
                   Add
                 </button>

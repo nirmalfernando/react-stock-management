@@ -91,6 +91,10 @@ const BillInformationForm = () => {
     // Handle going back to the previous page
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   const handleAmountPaidChange = (e) => {
     setAmountPaid(e.target.value);
   };
@@ -200,7 +204,10 @@ const BillInformationForm = () => {
           Cancel
         </button>
         <button className="save-print-button7" onClick={saveOrder}>
-          Save and Print Bill
+          Save
+        </button>
+        <button className="print-button" onClick={handlePrint}>
+          Print Bill
         </button>
         {error && <div className="error-message">{error}</div>}
       </div>

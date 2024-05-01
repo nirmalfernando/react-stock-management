@@ -4,6 +4,9 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import productRoutes from "./routes/products.js";
 import purchaseRoutes from "./routes/purchases.js";
+import goodReceiveRoutes from "./routes/goodreceives.js";
+import goodReturnRoutes from "./routes/goodreturns.js";
+import salesOrderRoutes from "./routes/salesorders.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
@@ -28,6 +31,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/purchases", purchaseRoutes);
+app.use("/api/goodreceives", goodReceiveRoutes);
+app.use("/api/goodreturns", goodReturnRoutes);
+app.use("/api/salesorders", salesOrderRoutes);
 
 //
 // app.get("/user", (req, res) => {

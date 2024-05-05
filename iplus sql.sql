@@ -10,6 +10,7 @@ create table user(
     email varchar(255),
     phoneno varchar(11),
     image varchar(255),
+    role varchar(50),
     status varchar(100),
     statusdate datetime
 );

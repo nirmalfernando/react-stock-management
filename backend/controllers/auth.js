@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 export const register = (req, res) => {
   //CHECK IF THE USER ALREADY EXISTS
 
-  const q = "SELECT * FROM user WHERE userid = ?";
+  const q = "SELECT * FROM user WHERE userid = ? OR username=?";
 
-  db.query(q, [req.body.userid], (err, data) => {
+  db.query(q, [req.body.userid, req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
 
@@ -16,11 +16,15 @@ export const register = (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
+    //Current Date and Time
+    const cdt = new Date();
+    const date =
+      cdt.toISOString().slice(0, 10) + " " + cdt.toTimeString().slice(0, 8);
+
     const q =
-      "INSERT INTO user (`userid`,`username`,`name`,`password`,`email`,`phoneno`,`image`,`role`) VALUES (?)";
+      "INSERT INTO user (`username`,`name`,`password`,`email`,`phoneno`,`image`,`role`,`status`,`statusdate`) VALUES (?)";
 
     const values = [
-      req.body.userid,
       req.body.username,
       req.body.name,
       hashedPassword,
@@ -28,6 +32,8 @@ export const register = (req, res) => {
       req.body.phoneno,
       req.body.image,
       req.body.role,
+      1,
+      cdt,
     ];
 
     db.query(q, [values], (err, data) => {
@@ -40,7 +46,7 @@ export const register = (req, res) => {
 export const login = (req, res) => {
   //CHECK IF THE USER ALREADY EXISTS
 
-  const q = "SELECT * FROM user WHERE username = ?";
+  const q = "SELECT * FROM user WHERE username = ? AND status=1";
 
   db.query(q, [req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
@@ -54,7 +60,7 @@ export const login = (req, res) => {
     if (!checkPassword)
       return res.status(400).json("Wrong Password or Username!");
 
-    const token = jwt.sign({ id: data[0].userid }, process.env.JWT);
+    const token = jwt.sign({ id: data[0].userid,role:data[0].role }, process.env.JWT);
 
     const { password, ...others } = data[0];
 

@@ -32,12 +32,13 @@ const Products = () => {
   };
 
   return (
+    <div className="fullpage">
     <div className="registration-form-container">
-      <h2>Products</h2>
+      <h2 className="pageName">Products</h2>
       <form>
         <div className="column">
           <div className="form-group1">
-            <label htmlFor="name">Product Name:</label>
+            <label htmlFor="name" className="tnputInstructions">Product Name:</label>
             <input
               type="text"
               id="productname"
@@ -47,7 +48,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="productId">Category ID:</label>
+            <label htmlFor="productId" className="tnputInstructions">Category ID:</label>
             <input
               type="text"
               id="categoryid"
@@ -57,7 +58,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="capitalPrice">Purchasing Price (LKR):</label>
+            <label htmlFor="capitalPrice" className="tnputInstructions">Purchasing Price (LKR):</label>
             <input
               type="text"
               id="purchaseprice"
@@ -67,7 +68,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="sellingPrice">Selling Price (LKR):</label>
+            <label htmlFor="sellingPrice" className="tnputInstructions">Selling Price (LKR):</label>
             <input
               type="text"
               id="sellingprice"
@@ -79,7 +80,7 @@ const Products = () => {
         </div>
         <div className="column">
           <div className="form-group1">
-            <label htmlFor="category">Category:</label>
+            <label htmlFor="category" className="tnputInstructions">Category:</label>
             <input
               type="text"
               id="category"
@@ -89,7 +90,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="brand">Brand:</label>
+            <label htmlFor="brand" className="tnputInstructions">Brand:</label>
             <input
               type="text"
               id="brand"
@@ -99,7 +100,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="variant">Type/Colour:</label>
+            <label htmlFor="variant" className="tnputInstructions">Type/Colour:</label>
             <input
               type="text"
               id="variant"
@@ -109,7 +110,7 @@ const Products = () => {
             />
           </div>
           <div className="form-group1">
-            <label htmlFor="sku">SKU (Barcode):</label>
+            <label htmlFor="sku" className="tnputInstructions">SKU (Barcode):</label>
             <input
               type="text"
               id="sku"
@@ -120,7 +121,7 @@ const Products = () => {
           </div>
         </div>
         <div className="photo-upload">
-          <label htmlFor="photo">Choose Photo:</label>
+          <label htmlFor="photo" className="tnputInstructions">Choose Photo:</label>
           <div className="photo-upload-input">
             <input
               type="file"
@@ -129,8 +130,8 @@ const Products = () => {
               accept="image/*"
               onChange={handleChange}
             />
-            <label htmlFor="photo" className="file-label">
-              <FaImage /> Choose File
+            <label htmlFor="photo" className="file-label" >
+              <FaImage /> <span className="tnputInstructions">Choose File</span>
             </label>
           </div>
         </div>
@@ -142,6 +143,7 @@ const Products = () => {
           Submit
         </button>
       </form>
+    </div>
     </div>
   );
 };

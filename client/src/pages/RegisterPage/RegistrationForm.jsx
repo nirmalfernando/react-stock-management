@@ -130,20 +130,20 @@ const RegistrationForm = () => {
         </div>
 
         <div className="photo-upload">
-          {/* <label htmlFor="photo">Choose Photo:</label>
+          <label htmlFor="photo">Choose Photo:</label>
           <div className="photo-upload-input">
             <input type="file" id="photo" accept="image/*" />
             <label htmlFor="photo" className="file-label">
               <FaImage /> Choose File
             </label>
-          </div> */}
-          <input
+          </div>
+          {/* <input
             type="text"
             placeholder="image"
             id="image"
             name="image"
             onChange={handleChange}
-          />
+          /> */}
         </div>
 
         <div className="delete-button">

@@ -8,7 +8,8 @@
 
 .inventory-page {
   width: 100%;
-  padding: 20px;
+  height: 90%;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,12 +17,17 @@
 
 .cardd {
   width: 968px;
-  height: 441px;
+  height: 80vh;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 20px;
+}
+
+.pageName{
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 .search-filter {
@@ -29,11 +35,12 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  font-size: 12px;
 }
 
 .search-filter input[type="text"] {
   width: 60%;
-  height: 36px;
+  height: 15px;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -41,10 +48,12 @@
 
 .search-filter select {
   width: 30%;
-  height: 40px;
+  height: 25px;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 12px;
+
 }
 
 .inventorytable {
@@ -53,21 +62,29 @@
 }
 
 .inventorytable th{
-  padding: 10px;
+  height: 10px;
+}
+
+.inventorytable th{
+  padding: 5px;
   text-align: left;
   border: 1px solid #ccc;
   color: #B5B7C0;
+  font-size: 12px;
 }
 .inventorytable td {
   padding: 10px;
   text-align: left; 
   border: none;
+  font-size: 12px;
+
 }
 
 .inventorytable td img {
   display: inline-block; 
   vertical-align: middle; 
   margin-right: 5px;
+  height: 15px;
 }
 
 .inventorytable td span {
@@ -80,12 +97,13 @@
 
 .note-buttons {
   display: flex;
-  justify-content: space-around;
-  width: 100%;
+  justify-content: space-between;
+  width: 90%;
 }
 
 .note-buttons button {
-  padding: 30px 60px;
+  width: 200px;
+  height: 40px;
   border: none;
   border-radius: 5px;
   background-color: #C3817D;

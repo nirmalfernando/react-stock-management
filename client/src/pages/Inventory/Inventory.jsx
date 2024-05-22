@@ -87,8 +87,9 @@ const InventoryPage = () => {
     <div className="full-screen">
       <div className="inventory-page">
         <div className="cardd">
+        <h2 className="pageName">Inventory</h2>
           <div className="search-filter">
-            <input type="text" placeholder="Search..." />
+            <input type="text" placeholder="Search..." className="searchBar"/>
             <select>
               <option value="">Filter by Days</option>
               <option value="1">Last 1 day</option>

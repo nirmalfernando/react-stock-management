@@ -40,7 +40,7 @@ const Category = ({ changeActiveTab1 }) => {
         <Card className="card6" onClick={handleMobileClick}>
           <CardContent>
             <Typography variant="h5" component="h2">
-              <FaMobile style={{ fontSize: "4rem" }} />Mobile phones and Accessories
+              <FaMobile style={{ fontSize: "1rem" ,paddingRight: "2rem" }} /><span className='spantitles'>Mobile phones and Accessories</span>
             </Typography>
           </CardContent>
         </Card>
@@ -48,7 +48,7 @@ const Category = ({ changeActiveTab1 }) => {
         <Card className="card6" onClick={handleStatClick}>
           <CardContent>
             <Typography variant="h5" component="h2">
-              <GiBookshelf style={{ fontSize: "4rem" }} />Stationaries
+              <GiBookshelf style={{ fontSize: "1rem" ,paddingRight: "2rem" }} /><span className='spantitles'>Stationaries</span>
             </Typography>
           </CardContent>
         </Card>
@@ -56,7 +56,7 @@ const Category = ({ changeActiveTab1 }) => {
         <Card className="card6" onClick={handleFancyClick}>
           <CardContent>
             <Typography variant="h5" component="h2">
-              <GiLipstick style={{ fontSize: "4rem" }} />Fancy item
+              <GiLipstick style={{ fontSize: "1rem" ,paddingRight: "2rem" }} /><span className='spantitles'>Fancy item</span>
             </Typography>
           </CardContent>
         </Card>
@@ -64,7 +64,7 @@ const Category = ({ changeActiveTab1 }) => {
         <Card className="card6" onClick={handleFoodClick}>
           <CardContent>
             <Typography variant="h5" component="h2">
-              <IoFastFoodOutline style={{ fontSize: "4rem" }} />Food court
+              <IoFastFoodOutline style={{ fontSize: "1rem" ,paddingRight: "2rem" }} /><span className='spantitles'>Food court</span>
             </Typography>
           </CardContent>
         </Card>

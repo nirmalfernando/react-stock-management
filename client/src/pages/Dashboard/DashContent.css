@@ -1,13 +1,19 @@
 .overview {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
+  text-align: left;
+}
+
+.overviewTitle{
+  font-size: 16px;
+  text-align: left;
 }
 
 .card3 {
   width: 300px;
-  height: 150px;
-  margin: 10px;
+  height: 220px;
+  margin: 10px 10px 10px 10px;
   border-radius: 15px;
   overflow: hidden;
 }
@@ -20,7 +26,7 @@
 
 .card6 {
   width: calc(50% - 10px);
-  height: 150px;
+  height: 100px;
   border-radius: 15px;
   overflow: hidden;
   border: 1px solid #ccc;
@@ -32,7 +38,7 @@
 }
 
 .card-content svg {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 .card6:hover {
   cursor: pointer;

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable"; 
 import "./BillInfo.css";
 
 const BillInformationForm = () => {
@@ -91,8 +93,43 @@ const BillInformationForm = () => {
     // Handle going back to the previous page
   };
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+  
+    doc.text("Bill Information", 14, 20);
+    doc.text(`Date: ${formattedDate}`, 14, 30);
+  
+    doc.autoTable({
+      startY: 40,
+      head: [['SKU', 'Item Name', 'Quantity', 'Price', 'Total']],
+      body: cartItems.map(item => [
+        item.sku, 
+        item.productname, 
+        item.qty, 
+        item.sellingprice.toFixed(2), 
+        (item.qty * item.sellingprice).toFixed(2)
+      ]),
+    });
+  
+    const finalY = doc.lastAutoTable.finalY + 10;
+  
+    doc.text(`Subtotal: LKR ${calculateSubTotal().toFixed(2)}`, 14, finalY);
+    doc.text(`Tax (${inputs.tax}%): LKR ${(calculateSubTotal() * (inputs.tax / 100)).toFixed(2)}`, 14, finalY + 10);
+    doc.text(`Discount (${inputs.discount}%): LKR ${(calculateSubTotal() * (inputs.discount / 100)).toFixed(2)}`, 14, finalY + 20);
+    doc.text(`Total: LKR ${calculateTotal()}`, 14, finalY + 30);
+    doc.text(`Amount Paid: LKR ${parseFloat(amountPaid).toFixed(2)}`, 14, finalY + 40);
+    doc.text(`Balance: LKR ${(calculateTotal() - parseFloat(amountPaid)).toFixed(2)}`, 14, finalY + 50);
+  
+    // Create a Blob from the PDF and open it in a new tab
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    window.open(pdfUrl);
+  };
+  
+
   const handlePrint = () => {
-    window.print();
+    generatePDF();
   };
 
   const handleAmountPaidChange = (e) => {

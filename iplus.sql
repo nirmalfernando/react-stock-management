@@ -4,7 +4,7 @@ use iplus;
 
 create table user(
 	userid int primary key auto_increment,
-    username varchar(255),
+    username varchar(255) unique,
     name varchar(255),
     password varchar(255),
     email varchar(255),
@@ -33,7 +33,6 @@ create table product(
     purchaseprice double,
     sellingprice double,
     image varchar(255),
-    qty int,
     enteredby varchar(255),
     status varchar(100),
     statusdate datetime
@@ -102,15 +101,4 @@ CREATE TABLE goodreturn_details(
     qty int,
     total double,
     FOREIGN KEY (grnno) REFERENCES goodreturn(grnno)
-);
-
-CREATE TABLE order_records(
-	id int PRIMARY KEY auto_increment,
-    sku varchar(100),
-    purchaseqty int,
-    soldqty int,
-    returnqty int,
-    qty int,
-    enteredby varchar(255),
-    FOREIGN KEY (sku) REFERENCES product(sku)
 );

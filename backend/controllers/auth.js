@@ -1,13 +1,14 @@
 import { db } from "../connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import getStatusDateTIme from "../utils/getStatusDateTime.js";
 
 export const register = (req, res) => {
   //CHECK IF THE USER ALREADY EXISTS
 
-  const q = "SELECT * FROM user WHERE userid = ?";
+  const q = "SELECT * FROM user WHERE userid = ? OR username=?";
 
-  db.query(q, [req.body.userid], (err, data) => {
+  db.query(q, [req.body.userid, req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
 
@@ -16,8 +17,9 @@ export const register = (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
+    const date = getStatusDateTIme();
     const q =
-      "INSERT INTO user (`userid`,`username`,`name`,`password`,`email`,`phoneno`,`image`,`role`) VALUES (?)";
+      "INSERT INTO user (`userid`,`username`,`name`,`password`,`email`,`phoneno`,`image`,`role`,`status`,`statusdate`) VALUES (?)";
 
     const values = [
       req.body.userid,
@@ -28,6 +30,8 @@ export const register = (req, res) => {
       req.body.phoneno,
       req.body.image,
       req.body.role,
+      1,
+      date,
     ];
 
     db.query(q, [values], (err, data) => {
@@ -40,7 +44,7 @@ export const register = (req, res) => {
 export const login = (req, res) => {
   //CHECK IF THE USER ALREADY EXISTS
 
-  const q = "SELECT * FROM user WHERE username = ?";
+  const q = "SELECT * FROM user WHERE username = ? AND status=1";
 
   db.query(q, [req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);

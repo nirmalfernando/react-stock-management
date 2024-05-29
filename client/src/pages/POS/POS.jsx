@@ -34,8 +34,8 @@ const ProductPage = () => {
     <div className="product-page">
       <div className="top-bar">
         <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <AiOutlineSearch />
+          <input type="text" placeholder="Search..." className="searchBar"/>
+          <AiOutlineSearch className="searchicon"/>
         </div>
         <select className="filter-select">
           <option value="price">Price</option>

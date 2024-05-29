@@ -14,12 +14,12 @@ const Dashboard = () => {
       chart: {
         id: 'monthly-chart',
         type: 'bar',
-        height: 200,
+        height: 400,
       },
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: '50%', 
+          barHeight: '80%', 
         },
       },
       xaxis: {
@@ -52,7 +52,7 @@ const Dashboard = () => {
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: '50%', 
+          barHeight: '80%', 
         },
       },
       xaxis: {
@@ -84,17 +84,17 @@ const Dashboard = () => {
         <Card className="card3">
           <CardContent>
             <Typography variant="h5" component="h2">
-              Monthly Overview
+              <span className='overviewTitle'>Monthly Overview</span>
             </Typography> 
-            <ReactApexChart options={monthlyData.options} series={monthlyData.series} type="bar" height={350} />
+            <ReactApexChart options={monthlyData.options} series={monthlyData.series} type="bar" height={""} />
           </CardContent>
         </Card>
         <Card className="card3">
           <CardContent>
             <Typography variant="h5" component="h2">
-              Yearly Overview
+              <span className='overviewTitle'>Yearly Overview</span>
             </Typography>
-            <ReactApexChart options={yearlyData.options} series={yearlyData.series} type="bar" height={350} />
+            <ReactApexChart options={yearlyData.options} series={yearlyData.series} type="bar" height={""} />
           </CardContent>
         </Card>
       </div>

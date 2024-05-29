@@ -12,47 +12,51 @@ body {
 .top-bar {
   width: 100%;
   background-color: #fff;
-  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
+
 .search-bar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
+  font-size: 12px;
+  margin-top: 20px;
+  width: 300px;
+  margin-right: 20px;
 }
 
-.search-box {
-  border: 1px solid #ccc; /* Added border */
-  border-radius: 20px; /* Added border radius */
-  padding: 5px 10px; /* Added padding */
-  display: flex;
-  align-items: center;
+.search-bar input[type="text"] {
+  width: 60%;
+  height: 15px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
+.search-bar input::placeholder {
+  color: #ccc;
 }
 
-.search-box input::placeholder {
-  color: #aaa;
-}
-
-.search-box input:focus::placeholder {
+.search-bar input:focus::placeholder {
   color: transparent;
 }
 
-.search-box input[type="text"] {
+.search-bar input[type="text"] {
   flex: 1;
 }
-
+.searchicon{
+  margin-left: 8px;
+  font-size: 20px;
+  color: #333;
+}
 .cart-button {
+  margin-right: 10px;
   padding: 5px;
   border-radius: 50%;
   border: none;
@@ -69,6 +73,9 @@ body {
 .filter-select {
   margin-left: 10px;
   background-color: #fff;
+  height: 25px;
+  border-radius: 5px;
+  margin-right: 20px;
 }
 
 .product-list {

@@ -13,6 +13,7 @@ import Inventory from "./pages/Inventory/Inventory";
 import { useNavigate } from "react-router-dom";
 import Category from "./pages/Category/Category";
 import { handleMobileClick } from "./pages/Category/Category";
+import profileimg from "./assets/ubetta.jpg"
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -27,9 +28,9 @@ function Dashboard() {
 
   const [role, setRole] = useState(null); // Initialize role state
   useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user")); // Get role from localStorage
-    let role = user?.role; // Access role property with optional chaining
-    setRole(role); // Set role state with retrieved value
+    // let user = JSON.parse(localStorage.getItem("user")); // Get role from localStorage
+    // let role = user?.role; // Access role property with optional chaining
+    setRole("Admin"); // Set role state with retrieved value
   }, []); // Empty dependency array ensures this effect runs only once after initial render
 
   const tabs = [
@@ -69,6 +70,14 @@ function Dashboard() {
               );
             }
           })}
+      <div className="sidebar-profileview">
+        <div className="image-background">
+        <img src={profileimg} alt="" className="dashboard-profile-img"/>
+        </div>
+        <div className="sidebar-name-back">
+          <span className="sidebar-name">test username</span>
+        </div>
+        </div> 
       </div>
 
       <div className="content">
@@ -79,6 +88,7 @@ function Dashboard() {
         {activeTab === "customer" && <CustomerTab />}
         {activeTab === "reports" && <ReportsTab />}
       </div>
+     
     </div>
   );
 }

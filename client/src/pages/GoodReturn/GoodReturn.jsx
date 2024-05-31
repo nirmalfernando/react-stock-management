@@ -3,6 +3,8 @@ import "./GoodReturn.css";
 import axios from "axios";
 
 const GoodReturn = () => {
+  const currentDate = new Date().toISOString().split('T')[0];
+
   const [inputs, setInputs] = useState({
     product: "",
     sku: "",
@@ -10,7 +12,7 @@ const GoodReturn = () => {
     qty: null,
     total: null,
     billid: "",
-    date: "",
+    date: currentDate,
     discount: null,
     tax: null,
   });
@@ -135,6 +137,7 @@ const GoodReturn = () => {
                 type="date"
                 id="date"
                 name="date"
+                value={inputs.date}
                 onChange={handleChange}
               />
             </div>

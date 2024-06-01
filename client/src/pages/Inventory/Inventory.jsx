@@ -12,15 +12,22 @@ const InventoryPage = () => {
     const fetchAllData = async () => {
       try {
         // Fetch products
-        const productsRes = await axios.get("http://localhost:8800/api/products/product");
+        const productsRes = await axios.get(
+          "http://localhost:8800/api/products/product"
+        );
         const productsData = productsRes.data;
 
         // Fetch and process good receive quantity data
         const getGoodReceiveQty = async (sku) => {
           try {
-            const res = await axios.get(`http://localhost:8800/api/goodreceives/receive/qty/${sku}`);
+            const res = await axios.get(
+              `http://localhost:8800/api/goodreceives/receive/qty/${sku}`
+            );
             const qtyData = res.data;
-            const totalQty = qtyData.reduce((sum, record) => sum + record.qty, 0);
+            const totalQty = qtyData.reduce(
+              (sum, record) => sum + record.qty,
+              0
+            );
             return totalQty;
           } catch (err) {
             console.error("Error fetching good receive quantity", err);
@@ -31,9 +38,14 @@ const InventoryPage = () => {
         // Fetch and process sales order quantity data
         const getSalesOrderQty = async (sku) => {
           try {
-            const res = await axios.get(`http://localhost:8800/api/salesorders/order/qty/${sku}`);
+            const res = await axios.get(
+              `http://localhost:8800/api/salesorders/order/qty/${sku}`
+            );
             const qtyData = res.data;
-            const totalQty = qtyData.reduce((sum, record) => sum + record.qty, 0);
+            const totalQty = qtyData.reduce(
+              (sum, record) => sum + record.qty,
+              0
+            );
             return totalQty;
           } catch (err) {
             console.error("Error fetching sales order quantity", err);
@@ -87,9 +99,9 @@ const InventoryPage = () => {
     <div className="full-screen">
       <div className="inventory-page">
         <div className="cardd">
-        <h2 className="pageName">Inventory</h2>
+          <h2 className="pageName">Inventory</h2>
           <div className="search-filter">
-            <input type="text" placeholder="Search..." className="searchBar"/>
+            <input type="text" placeholder="Search..." className="searchBar" />
             <select>
               <option value="">Filter by Days</option>
               <option value="1">Last 1 day</option>
@@ -97,31 +109,37 @@ const InventoryPage = () => {
               <option value="30">Last 30 days</option>
             </select>
           </div>
-          <table className="inventorytable">
-            <thead>
-              <tr>
-                <th>Product SKU</th>
-                <th>Product Image</th>
-                <th>Product Name</th>
-                <th>Stock</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.productid}>
-                  <td>{product.sku}</td>
-                  <td>
-                    {/* <img src={product.image || productImage} alt="Product" style={{ width: "60px" }} /> */}
-                    <img src={productImage} alt="Product" style={{ width: "60px" }} />
-                  </td>
-                  <td>{product.productname}</td>
-                  <td>{product.stock}</td>
-                  <td>{product.sellingprice}</td>
+          <div className="table-wrapper">
+            <table className="inventorytable">
+              <thead>
+                <tr>
+                  <th>Product SKU</th>
+                  <th>Product Image</th>
+                  <th>Product Name</th>
+                  <th>Stock</th>
+                  <th>Price</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="tb">
+                {products.map((product) => (
+                  <tr key={product.productid}>
+                    <td>{product.sku}</td>
+                    <td>
+                      {/* <img src={product.image || productImage} alt="Product" style={{ width: "60px" }} /> */}
+                      <img
+                        src={productImage}
+                        alt="Product"
+                        style={{ width: "60px" }}
+                      />
+                    </td>
+                    <td>{product.productname}</td>
+                    <td>{product.stock}</td>
+                    <td>{product.sellingprice}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="note-buttons">
           <button onClick={handleReservation}>Good Reservation Note</button>

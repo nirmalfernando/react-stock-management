@@ -114,3 +114,9 @@
 .note-buttons button:last-child {
   background-color: #FF968F;
 }
+
+
+.table-wrapper {
+  max-height: 80%; /* Set a max height for scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+}

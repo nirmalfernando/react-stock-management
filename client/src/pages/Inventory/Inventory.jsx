@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Inventory.css";
-import productImage from "../../assets/phone.png";
+import productImage from "../../assets/ubetta.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -112,7 +112,8 @@ const InventoryPage = () => {
                 <tr key={product.productid}>
                   <td>{product.sku}</td>
                   <td>
-                    <img src={product.image || productImage} alt="Product" style={{ width: "60px" }} />
+                    {/* <img src={product.image || productImage} alt="Product" style={{ width: "60px" }} /> */}
+                    <img src={productImage} alt="Product" style={{ width: "60px" }} />
                   </td>
                   <td>{product.productname}</td>
                   <td>{product.stock}</td>

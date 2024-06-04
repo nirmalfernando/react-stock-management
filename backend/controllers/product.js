@@ -1,8 +1,9 @@
 import { db } from "../connect.js";
+import getStatusDateTIme from "../utils/getStatusDateTime.js";
 
 export const addProduct = (req, res) => {
   const q =
-    "INSERT INTO product (`productname`,`category`,`categoryid`,`brand`,`variant`,`sku`,`purchaseprice`,`sellingprice`,`image`) VALUES (?)";
+    "INSERT INTO product (`productname`,`category`,`categoryid`,`brand`,`variant`,`sku`,`purchaseprice`,`sellingprice`,`image`,status,statusdate) VALUES (?)";
   const values = [
     req.body.productname,
     req.body.category,
@@ -13,6 +14,8 @@ export const addProduct = (req, res) => {
     req.body.purchaseprice,
     req.body.sellingprice,
     req.body.image,
+    1, //status true 1
+    getStatusDateTIme(), //product add current time
   ];
 
   db.query(q, [values], (err, data) => {

@@ -76,3 +76,21 @@ export const getSalesOrderQty = (req, res) => {
     return res.json(data);
   });
 };
+
+export const getTotalSalesMonthly = (req, res) => {
+  const q =
+    "SELECT DATE_FORMAT(salesorder.date, '%Y-%m') AS month, SUM(qty) AS total_qty FROM salesorder JOIN salesorder_details ON salesorder.id = salesorder_details.salesorderid WHERE YEAR(salesorder.date) = YEAR(CURDATE()) GROUP BY month ORDER BY month";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+};
+
+export const getTotalSalesYearly = (req, res) => {
+  const q =
+    "select date_format(salesorder.date, '%Y') as year, sum(qty) as total_qty from salesorder join salesorder_details on salesorder.id=salesorder_details.salesorderid group by year order by year";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+};

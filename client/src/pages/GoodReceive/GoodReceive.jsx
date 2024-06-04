@@ -3,6 +3,7 @@ import "./GoodReceive.css";
 import axios from "axios";
 
 const GoodReceive = () => {
+  const currentDate = new Date().toISOString().split('T')[0];
   const [inputs, setInputs] = useState({
     product: "",
     sku: "",
@@ -11,7 +12,7 @@ const GoodReceive = () => {
     total: null,
     grnno: "",
     invoiceid: "",
-    date: "",
+    date: currentDate,
     discount: null,
     tax: null,
   });
@@ -137,6 +138,7 @@ const GoodReceive = () => {
                 type="date"
                 id="date"
                 name="date"
+                value={inputs.date}
                 onChange={handleChange}
               />
             </div>

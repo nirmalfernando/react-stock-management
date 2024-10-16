@@ -3,10 +3,14 @@ import {
   addGoodReceive,
   getGoodReceiveQty,
 } from "../controllers/goodreceive.js";
+import { verifyToken, isAdmin } from "../middleware/authRole.js";
 
 const router = express.Router();
 
-router.post("/goodreceive", addGoodReceive);
-router.get("/receive/qty/:id", getGoodReceiveQty);
+// Get good receive quantity
+router.get("/qty", verifyToken, isAdmin, getGoodReceiveQty);
+
+// Add a good receive
+router.post("/", verifyToken, isAdmin, addGoodReceive);
 
 export default router;

@@ -1,8 +1,11 @@
-import mysql from "mysql";
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-export const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "{yourpassword}",
-  database: "iplus",
+dotenv.config();
+
+export const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
 });

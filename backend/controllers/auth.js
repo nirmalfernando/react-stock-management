@@ -1,82 +1,102 @@
 import { db } from "../connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import getStatusDateTIme from "../utils/getStatusDateTime.js";
+import dotenv from "dotenv";
+import getStatusDatTime from "../utils/getStatusDateTime.js";
 
-export const register = (req, res) => {
-  //CHECK IF THE USER ALREADY EXISTS
+dotenv.config();
 
-  const q = "SELECT * FROM user WHERE userid = ? OR username=?";
+const JWT_SECRET = process.env.JWT;
 
-  db.query(q, [req.body.userid, req.body.username], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length) return res.status(409).json("User already exists!");
+// Register a new User
+export const register = async (req, res) => {
+  const { username, name, password, email, phoneno, image, role } = req.body;
 
-    //CREATE A NEW USER
-    //ENCRYPTING THE PASSWORD
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+  try {
+    // Check if the user already exists
+    const query = "SELECT * FROM user WHERE username = ?";
+    const [rows] = await db.query(query, [username]);
 
-    const date = getStatusDateTIme();
-    const q =
-      "INSERT INTO user (`userid`,`username`,`name`,`password`,`email`,`phoneno`,`image`,`role`,`status`,`statusdate`) VALUES (?)";
+    if (rows.length > 0) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Encrypt the password
+    const salt = bcrypt.genSaltSync(20);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    // Create the new User
+    const statusDate = getStatusDatTime();
+    const insertQuery =
+      "INSERT INTO user (username, name, password, email, image, role, status, statusdate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     const values = [
-      req.body.userid,
-      req.body.username,
-      req.body.name,
+      username,
+      name,
       hashedPassword,
-      req.body.email,
-      req.body.phoneno,
-      req.body.image,
-      req.body.role,
+      email,
+      phoneno,
+      image,
+      role,
       1,
-      date,
+      statusDate,
     ];
 
-    db.query(q, [values], (err, data) => {
-      if (err) return res.json(err);
-      return res.status(200).json("User has been created!");
-    });
-  });
+    await db.query(insertQuery, values);
+
+    res.status(201).json({ message: "User created" });
+  } catch (error) {
+    console.error("Error during regisration: ", error);
+    res
+      .status(500)
+      .json({ message: "Unable to create user", error: error.message });
+  }
 };
 
-export const login = (req, res) => {
-  //CHECK IF THE USER ALREADY EXISTS
+// Login a User
+export const login = async (req, res) => {
+  const { username, password } = req.body;
 
-  const q = "SELECT * FROM user WHERE username = ? AND status=1";
+  try {
+    // Find the User by username
+    const query = "SELECT * FROM user WHERE username = ? AND status = 1";
+    const [rows] = await db.query(query, [username]);
 
-  db.query(q, [req.body.username], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length === 0) return res.status(404).json("User not found!");
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "User not found!" });
+    }
 
-    const checkPassword = bcrypt.compareSync(
-      req.body.password,
-      data[0].password
+    const user = rows[0];
+
+    // Check if the password is correct
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
-    if (!checkPassword)
-      return res.status(400).json("Wrong Password or Username!");
-
-    const token = jwt.sign({ id: data[0].userid }, process.env.JWT);
-
-    const { password, ...others } = data[0];
-
+    // Send the token and the User details (excluding the User password)
+    const { password: userPassword, ...userData } = user;
     res
-      .cookie("accessToken", token, {
-        httpOnly: true,
-      })
+      .cookie("accessToken", token, { httpOnly: true })
       .status(200)
-      .json(others);
-  });
+      .json({ user: userData });
+  } catch (error) {
+    console.error("Error during login: ", error);
+    res.status(500).json({ message: "Unable to login", error: error.message });
+  }
 };
 
-export const logout = (req, res) => {
+// Logout a User
+export const logout = async (req, res) => {
   res
-    .clearCookie("accessToken", {
-      secure: true,
-      sameSite: "none",
-    })
+    .clearCookie("accessToken", { secure: true, sameSite: "none" })
     .status(200)
-    .json("User has been logged out!");
+    .json({ message: "Logged out" });
 };

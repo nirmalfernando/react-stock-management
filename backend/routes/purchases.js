@@ -6,13 +6,27 @@ import {
   getPurchases,
   updatePurchase,
 } from "../controllers/purchase.js";
+import {
+  verifyToken,
+  isAdmin,
+  isOwnerOrAdmin,
+} from "../middleware/authRole.js";
 
 const router = express.Router();
 
-router.post("/purchase", addPurchase);
-router.put("/purchase/:id", updatePurchase);
-router.delete("/purchase/:id", deletePurchase);
-router.get("/purchase/:id", getPurchase);
-router.get("/purchase", getPurchases);
+// Get all purchases
+router.get("/", verifyToken, isAdmin, getPurchases);
+
+// Get a purchase by ID
+router.get("/:id", verifyToken, isAdmin, isOwnerOrAdmin, getPurchase);
+
+// Add a purchase
+router.post("/", verifyToken, addPurchase);
+
+// Update a purchase by ID
+router.put("/:id", verifyToken, isAdmin, updatePurchase);
+
+// Delete a purchase by ID
+router.delete("/:id", verifyToken, isAdmin, deletePurchase);
 
 export default router;
